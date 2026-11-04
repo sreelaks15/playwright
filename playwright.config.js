@@ -19,7 +19,11 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
    headless:false,  // to always run in headed mode -- opens link we given
-   timeout:50*1000 // or 50000 both can be used -- to set timeout -- if process not completed within 3 sec timeout error occurs. so timeout is given
+   timeout:50*1000, // or 50000 both can be used -- to set timeout -- if process not completed within 3 sec timeout error occurs. so timeout is given
+  expect: {
+    timeout:60000 //timeout for assertion -- if assertion not completed within 3 sec timeout error occurs. so timeout is given
+  }
+  
   }
 
 });
