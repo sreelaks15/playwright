@@ -24,7 +24,6 @@ await getFirstSelectedBtn.click();
 const message1 = await page.locator("#message-two").textContent()
 console.log(message1)
 const getAllSelectedBtn = await page.getByRole("button",{name:"Get All Selected"})
-await getAllSelectedBtn.click();
 const message2 = await page.locator("#message-two").textContent()
 console.log(message2)
 
