@@ -33,6 +33,43 @@ await expect(page).toHaveURL("https://www.saucedemo.com/inventory.html")
 console.log("Page title is: " , await page.title())
 await expect(page).toHaveTitle("Swag Labs") // to verify original title and fetched title is same
 
+const productTitle = await page.locator(".inventory_item_name")
+await productTitle.first().waitFor({state:"visible"}) // if many products are there, inorder to wait for first product
+const productCount = await productTitle.count()
+console.log("Product count = " + productCount)
+const productList = await productTitle.allTextContents() // fetch all products in page and store it in an array
+console.log("Product list are: ", productList)
+ //sorting (A-Z)
+const sortDropdown = await page.locator(".product_sort_container")
+await sortDropdown.selectOption("az")
+const a2zSortArrray = [...productList].sort() // to take a copy of productlist
+await expect (productList).toEqual(a2zSortArrray) // assertion to check sorted and productlist is same
+//sorting Z-A
+await sortDropdown.selectOption("za")
+const productList2 = await productTitle.allTextContents() // fetch all products in page and store it in an array
+console.log("Product list are: ", productList2)
+const z2aSortArray = [...productList2].sort().reverse()
+await expect (productList2).toEqual(z2aSortArray)
+
+
+
+const myProduct = "Sauce Labs Fleece Jacket"
+for(let i = 0; i < productCount;i++)
+{
+    const currentProduct = await productTitle.nth(i).textContent()
+    if(currentProduct == myProduct)
+    {
+        const addToCart = await page.locator(".btn.btn_primary.btn_small.btn_inventory").nth(i)
+        await addToCart.click()
+        console.log("Product added to cart is: " + myProduct)
+    }
+
+
+}
+
+
+
+
 await page.waitForTimeout(3000)
 
 
