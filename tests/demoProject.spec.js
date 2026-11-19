@@ -51,8 +51,27 @@ console.log("Product list are: ", productList2)
 const z2aSortArray = [...productList2].sort().reverse()
 await expect (productList2).toEqual(z2aSortArray)
 
+//sorting price low to high
+await sortDropdown.selectOption("lohi")
+const priceList = await page.locator(".inventory_item_price")
+const priceArray = await priceList.allTextContents()
+console.log(priceArray)
+const actualPrice = await priceArray.map(price=>parseFloat(price.replace('$',' ')))//remove $ because its string inorder to make it number
+console.log("Actual Price is: " , actualPrice)
+const sortL2H = [...actualPrice].sort((a,b)=>a-b)  // to sort numbers use this method of sorting
+await expect (actualPrice).toEqual(sortL2H)
+
+//sorting price high to low
+await sortDropdown.selectOption("hilo")
+const priceList2 = await priceList.allTextContents()
+console.log(priceList2)
+const actualPrice2 = await priceList2.map(price=>parseFloat(price.replace('$',' ')))//remove $ because its string inorder to make it number
+console.log("Actual Price is: " , actualPrice2)
+const sortH2L = [...actualPrice2].sort((a,b)=>b-a)
+await expect (actualPrice2).toEqual(sortH2L)
 
 
+//Add to cart
 const myProduct = "Sauce Labs Fleece Jacket"
 for(let i = 0; i < productCount;i++)
 {
@@ -62,13 +81,32 @@ for(let i = 0; i < productCount;i++)
         const addToCart = await page.locator(".btn.btn_primary.btn_small.btn_inventory").nth(i)
         await addToCart.click()
         console.log("Product added to cart is: " + myProduct)
+        break;
     }
-
-
 }
 
+const cartLink = await page.locator(".shopping_cart_link")
+await cartLink.click()
+await expect (page).toHaveURL("https://www.saucedemo.com/cart.html")
+const cartProduct = await page.locator(".inventory_item_name").allTextContents()
+await expect (cartProduct).toContain(myProduct)
+console.log("Added item in cart is : "+ cartProduct)
 
-
+//Checkout
+const checkoutBtn = await page.locator(".btn.btn_action.btn_medium.checkout_button")
+await checkoutBtn.click()
+await expect (page).toHaveURL("https://www.saucedemo.com/checkout-step-one.html")
+const firstName = await page.locator("#first-name").fill("Sreelakshmi")
+const lastName = await page.locator("#last-name").fill("S")
+const Zip = await page.locator("#postal-code").fill("695011")
+const continueBtn = await page.locator("#continue")
+await continueBtn.click()
+await expect (page).toHaveURL("https://www.saucedemo.com/checkout-step-two.html")
+const finishBtn = await page.locator("#finish")
+await finishBtn.click()
+await expect (page).toHaveURL("https://www.saucedemo.com/checkout-complete.html")
+console.log(await page.locator(".complete-header").textContent())
+console.log(await page.locator(".complete-text").textContent())
 
 await page.waitForTimeout(3000)
 
