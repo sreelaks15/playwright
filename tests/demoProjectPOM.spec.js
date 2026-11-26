@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { LoginPage } from '../pages/LoginPage'
 import { ProductPage } from '../pages/ProductPage'
 import { CheckoutPage } from '../pages/CheckoutPage'
+import { CartPage } from '../pages/CartPage'
+import { LogoutPage } from '../pages/LogoutPage'
 
 test("Valid username & Invalid password", async ({ page }) => {
     //Login page
@@ -9,6 +11,8 @@ test("Valid username & Invalid password", async ({ page }) => {
     const pwd = "secret_sauce"
     const invalidUN = "test"
     const invalidPwd = "test"
+    //add to cart
+    const myProduct = "Sauce Labs Fleece Jacket"
     //checkoutpage
     const firstname = "Sreelakshmi"
     const lastname = "S"
@@ -27,10 +31,14 @@ test("Valid username & Invalid password", async ({ page }) => {
     await productPage.sortZtoA()
     await productPage.sortLtoH()
     await productPage.sortHtoL()
-    await productPage.AddtoCart()
+    await productPage.AddtoCart(myProduct)
+    //cart page
+    const cartpage = new CartPage(page)
+    await cartpage.ValidateCartItem(myProduct)
     //Checkout page
     const checkoutPage = new CheckoutPage(page)
     await checkoutPage.CheckoutPage(firstname, lastname, zip)
-
-
+    //logout page
+    const logoutpage = new LogoutPage(page)
+    await logoutpage.Loggingout()
 })

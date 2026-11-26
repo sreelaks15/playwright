@@ -12,7 +12,8 @@ export class ProductPage {
         this.page = page
         //this.productCount = productCount
         this.cartLink = page.locator(".shopping_cart_link")
-        this.addToCart = this.page.locator(".btn.btn_primary.btn_small.btn_inventory")
+        this.addToCart = page.locator(".btn.btn_primary.btn_small.btn_inventory")
+
 
 
     }
@@ -58,8 +59,8 @@ export class ProductPage {
         const sortH2L = [...actualPrice2].sort((a, b) => b - a)
         await expect(actualPrice2).toEqual(sortH2L)
     }
-    async AddtoCart() {
-        const myProduct = "Sauce Labs Fleece Jacket"
+    async AddtoCart(myProduct) {
+
         for (let i = 0; i < this.productCount; i++) {
             const currentProduct = await this.productTitle.nth(i).textContent()
             if (currentProduct == myProduct) {
@@ -68,11 +69,6 @@ export class ProductPage {
                 break;
             }
         }
-
         await this.cartLink.click()
-        await expect(this.page).toHaveURL("https://www.saucedemo.com/cart.html")
-        const cartProduct = await this.page.locator(".inventory_item_name").allTextContents()
-        await expect(cartProduct).toContain(myProduct)
-        console.log("Added item in cart is : " + cartProduct)
     }
 }

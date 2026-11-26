@@ -16,6 +16,7 @@ export class CheckoutPage {
         await this.firstName.fill(firstname)
         await this.lastName.fill(lastname)
         await this.Zip.fill(zip)
+        await this.page.waitForTimeout(3000)
         await this.continueBtn.click()
         await expect(this.page).toHaveURL("https://www.saucedemo.com/checkout-step-two.html")
         await this.finishBtn.click()
@@ -23,7 +24,6 @@ export class CheckoutPage {
         const confirmationText = await this.page.locator(".checkout_complete_container").locator(".complete-header").textContent()
         console.log("Final confirmation message is: " + confirmationText)
         await expect(confirmationText).toContain("Thank you")
-
         await this.page.waitForTimeout(3000)
     }
 }
