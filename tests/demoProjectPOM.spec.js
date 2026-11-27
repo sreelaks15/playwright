@@ -1,44 +1,39 @@
 import { test, expect } from '@playwright/test'
-import { LoginPage } from '../pages/LoginPage'
-import { ProductPage } from '../pages/ProductPage'
-import { CheckoutPage } from '../pages/CheckoutPage'
-import { CartPage } from '../pages/CartPage'
-import { LogoutPage } from '../pages/LogoutPage'
+import { PageManager } from '../pages/PageManager'
+import testdata from "../Utils/testdata.json"
+const testString = JSON.stringify(testdata)
+const testobj = JSON.parse(testString)
+
 
 test("Valid username & Invalid password", async ({ page }) => {
-    //Login page
-    const uName = "standard_user"
-    const pwd = "secret_sauce"
-    const invalidUN = "test"
-    const invalidPwd = "test"
-    //add to cart
-    const myProduct = "Sauce Labs Fleece Jacket"
-    //checkoutpage
-    const firstname = "Sreelakshmi"
-    const lastname = "S"
-    const zip = "695011"
-
+ 
+    const POM = new PageManager(page)
     //Login Page
-    const loginPage = new LoginPage(page)
+    const loginPage = POM.getLoginPage()
+    const productPage = POM.getProductPage()
+    const cartpage = POM.getCartPage()
+    const checkoutPage = POM.getCheckoutPage()
+    const logoutpage = POM.getLogoutPage()
+
     await loginPage.navigatePage()
-    await loginPage.validateWithWrongPasssword(uName, invalidPwd)
+    await loginPage.validateWithWrongPasssword(testobj.uName, testobj.invalidPwd)
     await loginPage.emptyCredentials()
-    await loginPage.validCredentials(uName, pwd)
+    await loginPage.validCredentials(testobj.uName, testobj.pwd)
     //Product page
-    const productPage = new ProductPage(page)
+    
     await productPage.navigateProductPage()
     await productPage.sortAtoZ()
     await productPage.sortZtoA()
     await productPage.sortLtoH()
     await productPage.sortHtoL()
-    await productPage.AddtoCart(myProduct)
+    await productPage.AddtoCart(testobj.myProduct)
     //cart page
-    const cartpage = new CartPage(page)
-    await cartpage.ValidateCartItem(myProduct)
+    
+    await cartpage.ValidateCartItem(testobj.myProduct)
     //Checkout page
-    const checkoutPage = new CheckoutPage(page)
-    await checkoutPage.CheckoutPage(firstname, lastname, zip)
+    
+    await checkoutPage.CheckoutPage(testobj.firstname, testobj.lastname, testobj.zip)
     //logout page
-    const logoutpage = new LogoutPage(page)
+    
     await logoutpage.Loggingout()
 })

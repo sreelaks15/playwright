@@ -1,0 +1,11 @@
+{
+    "uName" :"standard_user",
+    "pwd" : "secret_sauce",
+    "invalidUN" : "test",
+    "invalidPwd" :"test",
+    "myProduct": "Sauce Labs Fleece Jacket",
+    "firstname" : "Sreelakshmi",
+    "lastname" : "S",
+    "zip" : "695011"
+
+}
